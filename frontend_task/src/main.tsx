@@ -7,10 +7,14 @@ import NotFound from './components/NotFound.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProductDetail from './components/ProductDetail.tsx'
 import Layout from './Layout.tsx'
-import ProductCard from './components/ProductCard.tsx'
+// import ProductCard from './components/ProductCard.tsx'
 import CartPage from './components/CartPage.tsx'
 import Home from './Home.tsx'
 import ProductPage from './components/ProductPage.tsx'
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+
+  const queryClient = new QueryClient();
+  
 
 const router = createBrowserRouter([
     {
@@ -34,6 +38,9 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client= {queryClient}>
+      <RouterProvider router={router} />
+
+    </QueryClientProvider>
   </StrictMode>,
 )
