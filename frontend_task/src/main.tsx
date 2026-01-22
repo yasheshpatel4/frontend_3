@@ -9,43 +9,26 @@ import ProductDetail from './components/ProductDetail.tsx'
 import Layout from './Layout.tsx'
 import ProductCard from './components/ProductCard.tsx'
 import CartPage from './components/CartPage.tsx'
+import Home from './Home.tsx'
+import ProductPage from './components/ProductPage.tsx'
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
         children: [
-            { path:"/", element:<App/>, 
-              children:[
-                { path: "products", element: <ProductCard theme={''} id={0} name={''} price={0} category={''} stock={0} deleteProduct={function (id: number): void {
-                  throw new Error('Function not implemented.')
-                } } addToCart={function (id: number): void {
-                  throw new Error('Function not implemented.')
-                } } /> },
-                { path: "products/:id", element: <ProductDetail /> },
-                {
-                path: "cart",
-                element: <CartPage cart={[]} products={[]} onUpdateQuantity={function (id: number, quantity: number): void {
-                  throw new Error('Function not implemented.')
-                } } onRemove={function (id: number): void {
-                  throw new Error('Function not implemented.')
-                } } onClear={function (): void {
-                  throw new Error('Function not implemented.')
-                } } onCheckout={function (): void {
-                  throw new Error('Function not implemented.')
-                } } totalPrice={0} />,
-                }
-             ]
-            },
-            {
-              path: "/about",
-              element: <About />,
-            },
-            {
-              path: "*",
-              element: <NotFound />,
-            },
-          ],
+      {
+        path: "/", 
+        element: <Home />, 
+        children: [
+          { path: "product", element: <ProductPage /> }, 
+          { path: "product/:id", element: <ProductDetail /> }, 
+          { path: "cart", element: <CartPage /> }, 
+        ],
+      },
+      { path: "about", element: <About /> }, 
+      { path: "*", element: <NotFound /> }, 
+    ],
     },
     
 ]);
