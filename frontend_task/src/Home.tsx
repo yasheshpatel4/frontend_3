@@ -3,6 +3,13 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `px-4 py-2 rounded-md transition-colors duration-200 ${
+      isActive
+        ? "bg-blue-600 text-white"
+        : "text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+    }`;
+
 export interface Product {
   id: number;
   title: string;
@@ -106,24 +113,40 @@ export const useFetchProducts = (search?: string) => {
   });
 };
 
+export const useFetchProductById = (id: string) => {
+  return useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const response = await axios.get(`https://dummyjson.com/products/${id}`);
+      const p = await response.data;
+      return {
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        category: p.category,
+        stock: p.stock,
+        description: p.description,
 
+      };
+    },
+  });
+};
 
 export default function Home() {
   return (
     <CartProvider>
       <div>
-        <h1>Home Page</h1>
         <nav>
           <NavLink
           to="/product"
-          className={({ isActive }) => isActive ? "active-link" : undefined}
+          className={navLinkClass}
         >
           Products
         </NavLink>
         {" | "}
         <NavLink
           to="/cart"
-          className={({ isActive }) => isActive ? "active-link" : undefined}
+          className={navLinkClass}
         >
           Cart
         </NavLink>
