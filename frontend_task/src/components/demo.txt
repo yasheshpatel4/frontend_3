@@ -1,0 +1,425 @@
+Frontend Technologies Session 3 Assignment – E-commerce Application 
+
+ 
+
+Objective 
+
+Build a small but well-structured e-commerce application to understand how modern React applications are designed using React Router, Redux Toolkit, Axios, and React Query. The focus of this assignment is architectural clarity, correct responsibility separation, and real-world patterns. 
+
+ 
+
+-------------------------------------------------- 
+
+Core Learning Goals 
+
+ 
+
+- Understand nested routing and layout routes using React Router 
+
+- Implement route-driven dialogs instead of conditional rendering 
+
+- Share data between routes using Outlet Context 
+
+- Manage global business state using Redux Toolkit 
+
+- Fetch and mutate server data using Axios and React Query 
+
+- Handle loading and error states correctly 
+
+- Understand where authentication and authorization fit in frontend applications 
+
+ 
+
+-------------------------------------------------- 
+
+Application Overview 
+
+ 
+
+The application represents a simple e-commerce flow where users can: 
+
+- Browse products 
+
+- View product details 
+
+- Customize a product before adding it to the cart 
+
+- Manage items in the cart 
+
+- Optionally add new products (seller functionality) 
+
+ 
+
+The application does not require a real backend. Mock APIs or fake endpoints may be used. 
+
+ 
+
+-------------------------------------------------- 
+
+Routing Structure (Mandatory) 
+
+ 
+
+/ 
+
+├── /shop 
+
+│   ├── products 
+
+│   ├── product/:productId 
+
+│   ├── product/:productId/customize 
+
+│   └── cart 
+
+├── /about 
+
+└── * (404) 
+
+ 
+
+Requirements: 
+
+- Use createBrowserRouter 
+
+- Use a MainLayout component with persistent navigation 
+
+- Use Outlet for nested routes 
+
+- All shop-related routes must be nested under /shop 
+
+ 
+
+-------------------------------------------------- 
+
+Navigation & Layout 
+
+ 
+
+- Create a navigation bar using NavLink 
+
+- Navigation items: Products, Cart, About 
+
+- Active routes must be visually highlighted 
+
+- The Cart link must: 
+
+  - Display total item quantity 
+
+  - Appear active when the cart contains at least one item 
+
+- Layout must remain mounted when navigating between shop pages 
+
+ 
+
+-------------------------------------------------- 
+
+Data Fetching Architecture (Very Important) 
+
+ 
+
+This assignment enforces a strict separation of responsibilities: 
+
+ 
+
+- Axios is responsible only for HTTP communication 
+
+- React Query is responsible for managing server state 
+
+- Redux is responsible for managing client-side business state 
+
+- Outlet Context is responsible for sharing route-scoped data 
+
+ 
+
+Violating this separation will be considered incorrect. 
+
+ 
+
+-------------------------------------------------- 
+
+Axios Usage 
+
+ 
+
+- Axios must be configured in a dedicated api folder 
+
+- Create a reusable Axios client 
+
+- Axios must not be called directly inside components 
+
+- Axios should be responsible for: 
+
+  - Base URL configuration(Use Environment variables) 
+
+  - Authentication headers(Use Fake JWT) 
+
+  - Interceptors (Required use for authentication or error handling) 
+
+ 
+
+-------------------------------------------------- 
+
+React Query Usage 
+
+ 
+
+- All server data fetching must use React Query 
+
+- React Query hooks must live in a dedicated queries folder 
+
+- React Query hooks must call Axios API functions 
+
+- Components must not manage loading or error state manually 
+
+- Loading and error states must be handled using React Query results 
+
+-Also use caching and invalidating queries wherever required. 
+
+ 
+
+-------------------------------------------------- 
+
+Product List Page (/shop/products) 
+
+ 
+
+Responsibilities: 
+
+- Fetch and display the list of products using React Query 
+
+- Handle loading and error states 
+
+- Display basic product information 
+
+- Provide navigation to product details 
+
+- Provide an Add to Cart option 
+
+ 
+
+Add Product Feature: 
+
+- Provide an option to add a new product 
+
+- This opens a product creation form 
+
+- Submitting the form should create a new product via API 
+
+- After successful creation, the product list must refresh 
+
+ 
+
+Optional: 
+
+- Restrict Add Product feature to sellers using Fake JWT role checking 
+
+ 
+
+-------------------------------------------------- 
+
+Product Details Page (/shop/product/:productId) 
+
+ 
+
+Responsibilities: 
+
+- Read productId from route parameters 
+
+- Fetch product details using React Query 
+
+- Handle loading and error states 
+
+- Display full product information 
+
+- Provide an Add to Cart option 
+
+- Pass fetched product data to nested routes using Outlet Context 
+
+ 
+
+-------------------------------------------------- 
+
+Customization Dialog (/shop/product/:productId/customize) 
+
+ 
+
+Critical Requirements: 
+
+- Must open as a dialog controlled by routing 
+
+- Conditional rendering must not be used to control visibility 
+
+- Closing the dialog navigates back to the product details route 
+
+ 
+
+Customization Form: 
+
+- Must read product data from Outlet Context 
+
+- Collect required customization fields 
+
+- Validate inputs before submission 
+
+- On submit: 
+
+  - Add product to cart using Redux 
+
+  - Navigate to the Cart page 
+
+ 
+
+-------------------------------------------------- 
+
+Cart Page (/shop/cart) 
+
+ 
+
+Responsibilities: 
+
+- Read cart data from Redux 
+
+- Display products along with customization details 
+
+- Allow quantity updates 
+
+- Allow product removal 
+
+- Cart state must drive Cart NavLink active styling 
+
+ 
+
+-------------------------------------------------- 
+
+Redux Requirements 
+
+ 
+
+Store Setup: 
+
+- Use Redux Toolkit 
+
+- Configure a central store 
+
+- Wrap the application using Redux Provider 
+
+ 
+
+Cart Slice Responsibilities: 
+
+- Store products added to the cart 
+
+- Store customization data per product 
+
+- Track quantity per product 
+
+- Identify cart items uniquely by product and customization 
+
+ 
+
+Usage Rules: 
+
+- Cart state must not be stored in local component state 
+
+- Product data must not be stored in Redux 
+
+- Redux must not manage loading or error states 
+
+ 
+
+Derived State & Performance: 
+
+- Do not store derived values (total price, total quantity) in Redux 
+
+- Compute derived values only when needed 
+
+- Avoid unnecessary global state updates 
+
+ 
+
+-------------------------------------------------- 
+
+Authentication & Authorization (Optional)	 
+
+ 
+
+- Implement fake JWT-based authentication 
+
+- Store JWT token in session storage 
+
+- Use Axios interceptors to attach authentication headers 
+
+- Use role information (e.g. SELLER) to control UI visibility 
+
+ 
+
+-------------------------------------------------- 
+
+Loading & Error Handling (Mandatory) 
+
+ 
+
+- Show loading indicators during data fetching 
+
+- Display meaningful error messages when API calls fail 
+
+- Do not store loading or error state in Redux 
+
+- Route-level errors must fall back to 404 page when appropriate 
+
+ 
+
+-------------------------------------------------- 
+
+404 Error Handling 
+
+ 
+
+- Implement a fallback route using * 
+
+- Display a Page Not Found message 
+
+- Provide navigation back to Products page 
+
+ 
+
+-------------------------------------------------- 
+
+Optional Enhancements 
+
+ 
+
+- Persist cart data using localStorage 
+
+- Add product search or filtering 
+
+- Integrate TanStack Table for the Products page 
+
+- Implement sorting and pagination using TanStack Table 
+
+- Improve accessibility and UI feedback 
+
+ 
+
+-------------------------------------------------- 
+
+Evaluation Criteria 
+
+ 
+
+- Correct routing structure and nested layouts 
+
+- Proper use of React Query and Axios 
+
+- Correct Redux state management 
+
+- Clean separation of responsibilities 
+
+- No misuse of conditional rendering for routing concerns 
+
+- Code readability and maintainability 
+
+ 
+
+ 

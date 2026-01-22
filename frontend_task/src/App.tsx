@@ -1,5 +1,5 @@
 import { useState,useEffect,useContext } from "react";
-import ProductCard from "./components/ProductCard";
+// import ProductCard from "./components/ProductCard";
 import CartPage from "./components/CartPage";
 import StatTiles from "./components/StatTiles";
 export interface Product {
@@ -134,12 +134,12 @@ function App(){
         onChange={(e)=>setSearch(e.target.value)}/>
 
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
         {filteredProducts.map((product)=>(
-          <ProductCard theme={theme} key={product.id} {...product}  deleteProduct={deleteProduct} addToCart={addToCart} /> ))}
-      </div>
+           <ProductCard theme={theme} key={product.id} {...product}  deleteProduct={deleteProduct} addToCart={addToCart} /> ))}
+      </div> */}
 
-      <CartPage
+      {/* <CartPage
         cart={cart}
         products={products}
         onUpdateQuantity={updateCartQuantity}
@@ -147,7 +147,7 @@ function App(){
         onClear={clearCart}
         onCheckout={()=>alert("Checkout functionality is remaining to implemnet")}
         totalPrice={getTotalPrice()}
-      />
+      /> */}
 
       <StatTiles products={products}/>
     </div>
