@@ -18,6 +18,7 @@ function Layout() {
         <NavLink className={navLinkClass} to="/cart">Cart</NavLink> */}
         <NavLink className={navLinkClass} to="/about">about</NavLink>
       </nav>
+      
       <main>
         <Outlet /> 
       </main>

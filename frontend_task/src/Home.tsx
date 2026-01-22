@@ -14,72 +14,69 @@ export interface Product {
 
 export interface CartItem {
   id: number;
+  // product:Products;
   quantity: number;
 }
 
 interface CartContextType {
-  cart: CartItem[];
-  addToCart: (id: number) => void;
-  updateCartQuantity: (id: number, quantity: number) => void;
-  removeFromCart: (id: number) => void;
-  clearCart: () => void;
-  getTotalPrice: () => number;
-}
+    cart: CartItem[];
+    addToCart: (id: number) =>void;
+    updateCartQuantity: (id: number, quantity: number) => void;
+    removeFromCart: (id: number) =>void;
+    clearCart: ()=>void;
+    getTotalPrice:()=>number;
+  }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within CartProvider");
+export const useCart =()=> {
+    const context = useContext(CartContext);
+  if(!context){
+    throw Error;
   }
   return context;
-};
+  };
 
-const CartProvider = ({ children }: { children: any }) => {
+const CartProvider =({ children }: { children: any })=>{
   const [cart, setCart] = useState<CartItem[]>(JSON.parse(localStorage.getItem("cart") || "[]"));
 
-  useEffect(() => {
+  useEffect(()=>{
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (id: number) => {
-    setCart((prev) => {
+  const addToCart =(id:number)=>{
+    setCart((prev)=>{
       const existing = prev.find((item) => item.id === id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
+
+
+      if (existing){
+          return prev.map((item) =>
+            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+      } else{
         return [...prev, { id, quantity: 1 }];
-      }
-    });
+        }} );
   };
 
-  const updateCartQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
+const updateCartQuantity = (id: number, quantity: number) => {
+    if (quantity <=0) {
       removeFromCart(id);
-    } else {
-      setCart((prev) =>
-        prev.map((item) =>
+    }else{
+      setCart((prev)=>prev.map((item) =>
           item.id === id ? { ...item, quantity } : item
-        )
-      );
+        ));
     }
-  };
+};
 
   const removeFromCart = (id: number) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const clearCart = () => {
+  const clearCart =() =>{
     setCart([]);
   };
 
-  const getTotalPrice = () => {
-    // Note: This needs products data, but since it's context, we'll handle in components
-    return 0; // Placeholder
-  };
+  const getTotalPrice =()=>{ return 0; };
 
   return (
     <CartContext.Provider value={{ cart, addToCart, updateCartQuantity, removeFromCart, clearCart, getTotalPrice }}>
@@ -93,7 +90,7 @@ export const useFetchProducts = (search?: string) => {
 
     queryKey: ["products", search],
 
-    queryFn: async () => {
+    queryFn: async() =>{
       const url = search ? `https://dummyjson.com/products/search?q=${search}` : `https://dummyjson.com/products`;
       const response =await axios.get(url);
 
@@ -104,28 +101,12 @@ export const useFetchProducts = (search?: string) => {
         category: p.category,
         stock: p.stock,
         description: p.description,
-      })) as Product[];
+      }))as Product[];
     },
   });
 };
 
-export const useFetchProductById = (id: string) => {
-  return useQuery({
-    queryKey: ["product", id],
-    queryFn: async () => {
-      const response = await axios.get(`https://dummyjson.com/products/${id}`);
-      const p = response.data;
-      return {
-        id: p.id,
-        title: p.title,
-        price: p.price,
-        category: p.category,
-        stock: p.stock,
-        description: p.description,
-      } as Product;
-    },
-  });
-};
+
 
 export default function Home() {
   return (
