@@ -2,6 +2,7 @@ import { Outlet, NavLink } from "react-router-dom";
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import api from "./components/api";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `px-4 py-2 rounded-md transition-colors duration-200 ${
@@ -99,7 +100,7 @@ export const useFetchProducts = (search?: string) => {
 
     queryFn: async() =>{
       const url = search ? `https://dummyjson.com/products/search?q=${search}` : `https://dummyjson.com/products`;
-      const response =await axios.get(url);
+      const response =await api(url);
 
       return response.data.products.map((p: any) => ({
         id: p.id,
@@ -126,7 +127,6 @@ export const useFetchProductById = (id: string) => {
         category: p.category,
         stock: p.stock,
         description: p.description,
-
       };
     },
   });

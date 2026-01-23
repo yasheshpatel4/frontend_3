@@ -33,7 +33,7 @@ export default function ProductPage() {
         {products?.map((product: Product) => (
           <div key={product.id} className="border p-4">
             <h2 className="text-lg font-bold">{product.title}</h2>
-            <p>Price: ${product.price}{product.price > 500 && <div> (premium)</div>}</p>
+            <p>Price: ${product.price}{product.price > 500 && <span> (premium)</span>}</p>
             <p>Category: {product.category}</p>
             {product.stock === 0 && <p>out of stock</p>}
             {product.stock > 0 && product.stock < 6 && <p>limited</p>}
